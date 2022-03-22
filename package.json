@@ -1,0 +1,47 @@
+{
+  "name": "@reaction-link/actions-lint-pull",
+  "description": "Linting Pull Requests since 2022",
+  "author": "Maurice Arikoglu",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/reaction-link/actions-lint-pull.git"
+  },
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "engines": {
+    "npm": "please-use-yarn",
+    "yarn": "1.x"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js",
+    "prepare": "husky install",
+    "test": "jest --passWithNoTests",
+    "pre-format": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json}": [
+      "prettier --config .prettierrc.json --write"
+    ]
+  },
+  "keywords": [
+    "actions",
+    "github actions"
+  ],
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.3",
+    "husky": "^7.0.4",
+    "jest": "^27.5.1",
+    "lint-staged": "^12.3.7",
+    "prettier": "^2.6.0"
+  },
+  "peerDependencies": {}
+}

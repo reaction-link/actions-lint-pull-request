@@ -1,0 +1,42 @@
+name: "Lint Pull Request"
+description: "Lint the pull request structure and leave a comment suggesting changes if linting fails"
+author: 'reaction.link'
+
+inputs:
+  config-bot-repotoken:
+    description: "Token with repo-scope permissions for a GitHub user (bot account for example)"
+    required: true
+  config-bot-login:
+    description: "Username of the GitHub user (bot account for example)"
+    required: true
+  github-event:
+    description: "toJSON of github.event (event triggering the action)"
+    required: true
+  use-greetings:
+    description: "JSON string array to use for randomly selected greetings (used in comment body)"
+    default: '["Hello"]'
+  use-approval-labels:
+    description: "JSON string array to use for labeling linted pull request"
+    default: '["Good"]'
+  use-title-regex:
+    description: "Escaped Regex string to use for linting the pull request title"
+    default: '\\w+'
+  use-description-regex:
+    description: "Escaped Regex string to use for linting the pull request description"
+    default: '\\w+'
+  use-problem-title:
+    description: "Escaped template string to use for highlighting a title that failed to pass (used in comment body). Template-Literals: {title}"
+    default: '- The title \`${title}\` is not the format I expected.'
+  use-problem-description:
+    description: "Escaped template string to use for highlighting a description that failed to pass (used in comment body). Template-Literals: {body}"
+    default: '- The description \`${body}\` is not the format I expected.'
+  use-explanation-title:
+    description: "JSON string array to describe rules to pass linting for the pull request title (used in comment body)"
+    default: '["- There must be a title","- Use proper capitalization"]'
+  use-explanation-description:
+    description: "JSON string array to describe rules to pass linting for the pull request description (used in comment body)"
+    default: '["- There must be a description"]'
+
+runs:
+  using: "node16"
+  main: "dist/index.js"
