@@ -9,6 +9,8 @@ function extract(githubEvent) {
   const pullRequestBody = pullRequestData['body'];
   const pullRequestCommentCount = pullRequestData['comments'];
 
+  const pullRequestLabels = pullRequestData['labels'];
+
   const pullRequestUserData = pullRequestData['user'];
   const repositoryOwnerData = repositoryData['owner'];
 
@@ -23,6 +25,7 @@ function extract(githubEvent) {
     pullRequestTitle,
     pullRequestBody,
     pullRequestCommentCount,
+    pullRequestLabels,
     pullRequestUserLogin,
     repositoryOwnerLogin,
     repositoryName,

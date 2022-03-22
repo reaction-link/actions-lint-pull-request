@@ -2,6 +2,10 @@ name: "Lint Pull Request"
 description: "Lint the pull request structure and leave a comment suggesting changes if linting fails"
 author: 'reaction.link'
 
+branding:
+  icon: git-pull-request
+  color: blue
+
 inputs:
   config-bot-repotoken:
     description: "Token with repo-scope permissions for a GitHub user (bot account for example)"
@@ -13,28 +17,34 @@ inputs:
     description: "toJSON of github.event (event triggering the action)"
     required: true
   use-greetings:
-    description: "JSON string array to use for randomly selected greetings (used in comment body)"
-    default: '["Hello"]'
+    description: "JSON string array to use for randomly selected greetings (used in comment body, runs through JSON.parse)"
+    default: '["Hello @{name},\n"]'
   use-approval-labels:
-    description: "JSON string array to use for labeling linted pull request"
+    description: "JSON string array to use for labeling linted pull request (runs through JSON.parse)"
     default: '["Good"]'
   use-title-regex:
-    description: "Escaped Regex string to use for linting the pull request title"
-    default: '\\w+'
+    description: "Regex string to use for linting the pull request title"
+    default: '\w+'
   use-description-regex:
-    description: "Escaped Regex string to use for linting the pull request description"
-    default: '\\w+'
+    description: "Regex string to use for linting the pull request description"
+    default: '\w+'
+  use-title-regex-flag:
+    description: "Regex flag to use for linting the pull request title (Use empty string for none)"
+    default: 'g'
+  use-description-regex-flag:
+    description: "Regex flag to use for linting the pull request description (Use empty string for none)"
+    default: 'g'
   use-problem-title:
-    description: "Escaped template string to use for highlighting a title that failed to pass (used in comment body). Template-Literals: {title}"
-    default: '- The title \`${title}\` is not the format I expected.'
+    description: "Template string to use for highlighting a title that failed to pass (used in comment body). Template-Literals: {title}"
+    default: '- The title `{title}` is not the format I expected.'
   use-problem-description:
-    description: "Escaped template string to use for highlighting a description that failed to pass (used in comment body). Template-Literals: {body}"
-    default: '- The description \`${body}\` is not the format I expected.'
+    description: "Template string to use for highlighting a description that failed to pass (used in comment body). Template-Literals: {body}"
+    default: '- The description `{body}` is not the format I expected.'
   use-explanation-title:
-    description: "JSON string array to describe rules to pass linting for the pull request title (used in comment body)"
+    description: "JSON string array to describe rules to pass linting for the pull request title (used in comment body, runs through JSON.parse)"
     default: '["- There must be a title","- Use proper capitalization"]'
   use-explanation-description:
-    description: "JSON string array to describe rules to pass linting for the pull request description (used in comment body)"
+    description: "JSON string array to describe rules to pass linting for the pull request description (used in comment body, runs through JSON.parse)"
     default: '["- There must be a description"]'
 
 runs:

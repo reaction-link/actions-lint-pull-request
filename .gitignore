@@ -8,11 +8,7 @@ node_modules/
 # testing
 coverage/*
 
-# production
-build/
-
 #development
-dist/
 /playground/src/component-lib/
 
 # misc

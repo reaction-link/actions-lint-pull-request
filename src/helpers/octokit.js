@@ -13,7 +13,7 @@ async function getCommentId(octokit, eventData, actionData) {
     return comment['user']['login'] === actionData.botLogin;
   });
 
-  return comment['id'] ?? null;
+  return comment && comment['id'];
 }
 
 export { getCommentId };
@@ -25,7 +25,7 @@ async function addPRLabels(octokit, eventData, labels) {
       owner: eventData.repositoryOwnerLogin,
       repo: eventData.repositoryName,
       issue_number: eventData.pullRequestNumber,
-      name: labels,
+      labels: labels,
     }
   );
 }

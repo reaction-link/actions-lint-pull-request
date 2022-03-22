@@ -1,3 +1,5 @@
+const constants = require('./constants');
+
 function data(
   githubEventInput,
   configBotTokenInput,
@@ -6,6 +8,8 @@ function data(
   useApprovalLabelsInput,
   useTitleRegexInput,
   useDescriptionRegexInput,
+  useTitleRegexFlagInput,
+  useDescriptionRegexFlagInput,
   useProblemTitleInput,
   useProblemDescriptionInput,
   useExplanationTitleInput,
@@ -17,8 +21,11 @@ function data(
     botLogin: configBotLoginInput,
     greetings: JSON.parse(useGreetingsInput),
     approvalLabels: JSON.parse(useApprovalLabelsInput),
-    titleRegex: new RegExp(useTitleRegexInput, 'g'),
-    descriptionRegex: new RegExp(useDescriptionRegexInput, 'g'),
+    titleRegex: new RegExp(useTitleRegexInput, useTitleRegexFlagInput),
+    descriptionRegex: new RegExp(
+      useDescriptionRegexInput,
+      useDescriptionRegexFlagInput
+    ),
     useProblemTitle: useProblemTitleInput,
     useProblemDescription: useProblemDescriptionInput,
     useExplanationTitle: JSON.parse(useExplanationTitleInput),
@@ -26,4 +33,22 @@ function data(
   };
 }
 
-export { data };
+function getAction(inputProvider) {
+  return data(
+    inputProvider.getInput(constants.githubEvent),
+    inputProvider.getInput(constants.configBotRepoToken),
+    inputProvider.getInput(constants.configBotLogin),
+    inputProvider.getInput(constants.useGreetings),
+    inputProvider.getInput(constants.useApprovalLabels),
+    inputProvider.getInput(constants.useTitleRegex),
+    inputProvider.getInput(constants.useDescriptionRegex),
+    inputProvider.getInput(constants.useTitleRegexFlag),
+    inputProvider.getInput(constants.useDescriptionRegexFlag),
+    inputProvider.getInput(constants.useProblemTitle),
+    inputProvider.getInput(constants.useProblemDescription),
+    inputProvider.getInput(constants.useExplanationTitle),
+    inputProvider.getInput(constants.useExplanationDescription)
+  );
+}
+
+export { getAction };
