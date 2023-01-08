@@ -33,7 +33,10 @@ function data(
     greetings: JSON.parse(useGreetingsInput),
     approvalLabels: JSON.parse(useApprovalLabelsInput),
     titleRegex: new RegExp(useTitleRegexInput, useTitleRegexFlagInput),
-    descriptionRegex: new RegExp(useDescriptionRegexInput, useDescriptionRegexFlagInput),
+    descriptionRegex: new RegExp(
+      useDescriptionRegexInput,
+      useDescriptionRegexFlagInput
+    ),
     useProblemTitle: useProblemTitleInput,
     useProblemDescription: useProblemDescriptionInput,
     useExplanationTitle: JSON.parse(useExplanationTitleInput),
@@ -86,8 +89,8 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony export */ });
 const githubEvent = 'github-event';
 
-const configBotRepoToken = 'config-bot-repotoken';
-const configBotLogin = 'config-bot-login';
+const configBotRepoToken = 'access-token';
+const configBotLogin = 'token-login';
 
 const useGreetings = 'use-greetings';
 const useApprovalLabels = 'use-approval-labels';
@@ -167,7 +170,7 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony export */   "updateIssueComment": () => (/* binding */ updateIssueComment),
 /* harmony export */   "deleteIssueComment": () => (/* binding */ deleteIssueComment)
 /* harmony export */ });
-async function getCommentId(octokit, eventData, actionData) {
+async function getCommentId(octokit, eventData, actionData, commentPrefix) {
   const response = await octokit.request(
     'GET /repos/{owner}/{repo}/issues/{issue_number}/comments',
     {
@@ -179,7 +182,11 @@ async function getCommentId(octokit, eventData, actionData) {
 
   // Looking for previous comment
   const comment = response['data'].find((comment) => {
-    return comment['user']['login'] === actionData.botLogin;
+    console.log(comment);
+    return (
+      comment['user']['login'] === actionData.botLogin &&
+      comment['body'].startsWith(commentPrefix)
+    );
   });
 
   return comment && comment['id'];
@@ -8796,6 +8803,7 @@ const {
   deleteIssueComment,
 } = __nccwpck_require__(2754);
 const { greetings, explainProblems } = __nccwpck_require__(3171);
+const commentPrefix = '**Automated Response: [Lint Pull Request](https://github.com/reaction-link/actions-lint-pull-request)**';
 
 function lintPullRequestEvent(actionData, eventData) {
   const problemsFound = [];
@@ -8826,6 +8834,8 @@ function lintPullRequestEvent(actionData, eventData) {
 
 function getBody(actionData, eventData, problemsFound) {
   return [
+    commentPrefix,
+    '---',
     greetings(actionData.greetings, eventData.pullRequestUserLogin),
     explainProblems(problemsFound.length),
     '\n**Problems**:\n',
@@ -8859,7 +8869,7 @@ async function run() {
 
     const commentId =
       event.pullRequestCommentCount > 0
-        ? await getCommentId(octokit, event, action)
+        ? await getCommentId(octokit, event, action, commentPrefix)
         : null;
 
     if (success) {
@@ -8897,7 +8907,7 @@ async function run() {
       // Remove Labels displaying successful lint
       for (const label of action.approvalLabels) {
         console.log('Removing:', label);
-        if (event.pullRequestLabels.includes(label)) {
+        if (event.pullRequestLabels.map((l) => l.name).includes(label)) {
           await deletePRLabel(octokit, event, label);
         }
       }

@@ -11,6 +11,8 @@ const {
   deleteIssueComment,
 } = require('./helpers/octokit');
 const { greetings, explainProblems } = require('./helpers/rules');
+const commentPrefix =
+  '**Automated Response: [Lint Pull Request](https://github.com/reaction-link/actions-lint-pull-request)**';
 
 function lintPullRequestEvent(actionData, eventData) {
   const problemsFound = [];
@@ -41,6 +43,8 @@ function lintPullRequestEvent(actionData, eventData) {
 
 function getBody(actionData, eventData, problemsFound) {
   return [
+    commentPrefix,
+    '---',
     greetings(actionData.greetings, eventData.pullRequestUserLogin),
     explainProblems(problemsFound.length),
     '\n**Problems**:\n',
@@ -74,7 +78,7 @@ async function run() {
 
     const commentId =
       event.pullRequestCommentCount > 0
-        ? await getCommentId(octokit, event, action)
+        ? await getCommentId(octokit, event, action, commentPrefix)
         : null;
 
     if (success) {
@@ -112,7 +116,7 @@ async function run() {
       // Remove Labels displaying successful lint
       for (const label of action.approvalLabels) {
         console.log('Removing:', label);
-        if (event.pullRequestLabels.includes(label)) {
+        if (event.pullRequestLabels.map((l) => l.name).includes(label)) {
           await deletePRLabel(octokit, event, label);
         }
       }

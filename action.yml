@@ -1,17 +1,17 @@
 name: "Lint Pull Request"
 description: "Lint the pull request structure and leave a comment suggesting changes if linting fails"
-author: 'reaction.link'
+author: 'Maurice Arikoglu (reactionlink.de)'
 
 branding:
   icon: git-pull-request
   color: blue
 
 inputs:
-  config-bot-repotoken:
-    description: "Token with repo-scope permissions for a GitHub user (bot account for example)"
+  access-token:
+    description: "Token with triage permissions or GITHUB_TOKEN"
     required: true
-  config-bot-login:
-    description: "Username of the GitHub user (bot account for example)"
+  token-login:
+    description: "Username of the GitHub user"
     required: true
   github-event:
     description: "toJSON of github.event (event triggering the action)"

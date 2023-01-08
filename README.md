@@ -25,10 +25,11 @@ jobs:
 
     steps:
       - name: Lint Pull Request
-        uses: reaction-link/actions-lint-pull-request@v0
+        uses: reaction-link/actions-lint-pull-request@v2
         with:
+          triage-pr-token: ${{secrets.OUR_BOT_REPO_SCOPED_TOKEN}} // GITHUB_TOKEN does not work, is required for deleting labels
           config-bot-repotoken: ${{secrets.OUR_BOT_REPO_SCOPED_TOKEN}} // GITHUB_TOKEN also works
-          config-bot-login: reactionlinkbot // login for GITHUB_TOKEN is github_actions
+          config-bot-login: mybot // login for GITHUB_TOKEN is github-actions[bot]
           github-event: ${{toJson(github.event)}}
 ```
 
@@ -36,10 +37,16 @@ jobs:
 
 ```
 inputs:
-  config-bot-repotoken:
-    description: "Token with repo-scope permissions for a GitHub user (bot account for example)"
+  access-token: /** v2 */
+    description: "Token with triage permissions or GITHUB_TOKEN"
     required: true
-  config-bot-login:
+  token-login: /** v2 */
+    description: "Username of the GitHub user"
+    required: true
+  config-bot-repotoken: /** v1 */
+    description: "Token with permissions to comment on a Pull Request (Github Token for example)"
+    required: true
+  config-bot-login: /** v1 */
     description: "Username of the GitHub user (bot account for example)"
     required: true
   github-event:

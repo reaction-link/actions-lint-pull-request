@@ -1,4 +1,4 @@
-async function getCommentId(octokit, eventData, actionData) {
+async function getCommentId(octokit, eventData, actionData, commentPrefix) {
   const response = await octokit.request(
     'GET /repos/{owner}/{repo}/issues/{issue_number}/comments',
     {
@@ -10,7 +10,11 @@ async function getCommentId(octokit, eventData, actionData) {
 
   // Looking for previous comment
   const comment = response['data'].find((comment) => {
-    return comment['user']['login'] === actionData.botLogin;
+    console.log(comment);
+    return (
+      comment['user']['login'] === actionData.botLogin &&
+      comment['body'].startsWith(commentPrefix)
+    );
   });
 
   return comment && comment['id'];

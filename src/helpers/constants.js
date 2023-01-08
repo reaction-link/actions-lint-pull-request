@@ -1,7 +1,7 @@
 const githubEvent = 'github-event';
 
-const configBotRepoToken = 'config-bot-repotoken';
-const configBotLogin = 'config-bot-login';
+const configBotRepoToken = 'access-token';
+const configBotLogin = 'token-login';
 
 const useGreetings = 'use-greetings';
 const useApprovalLabels = 'use-approval-labels';
